@@ -48,6 +48,14 @@ export default function Play() {
 
 function Stage1({starting, setStage, setStarting, setTurn, setCurrentNumber, setHistory, setBegin}: {starting: number ,setStage: Dispatch<number>, setStarting: Dispatch<number>, setTurn: Dispatch<number>, setCurrentNumber: Dispatch<number>, setHistory: Dispatch<turnType[]>, setBegin: Dispatch<number>}) {
     const [loading, setLoading] = useState<boolean>(false)
+    const [startingValid, setStartingValid] = useState<boolean>(false)
+    useEffect(() => {
+        if (starting < 20) {
+            setStartingValid(false)
+        }else {
+            setStartingValid(true)
+        }
+    }, [starting])
     return(
         <div className="flex flex-col w-full items-center space-y-2">
             <div className="flex flex-col w-full sticky -top-2 items-center bg-white backdrop-blur-sm bg-opacity-70 p-2">
@@ -122,6 +130,9 @@ function Stage1({starting, setStage, setStarting, setTurn, setCurrentNumber, set
     }
 
     async function chooseNumber () {
+        if (!startingValid) {
+            return
+        }
         setLoading(true)
         if (starting%3 != 1) {
             setStarting(starting)
@@ -167,6 +178,9 @@ function Stage2({
             computerPlay()
         }
     }, [turn])
+    useEffect(() => {
+        scroll()
+    }, [currentNumber])
     return(
         <div className="flex flex-col w-full items-center space-y-2">
             <div className="flex flex-col w-full sticky -top-2 items-center bg-white backdrop-blur-sm bg-opacity-70 p-2 space-y-2">
@@ -193,7 +207,7 @@ function Stage2({
                     })}
                     {
                         currentNumber > 0 && (
-                            <div className="flex flex-row w-full justify-between space-x-2">
+                            <div id="buttonArea" className="flex flex-row w-full justify-between space-x-2">
                                 <Button className="btnBlue flex-1" disabled={turn == COMPUTER? true : false} onClick={() => personPlay(1)}>
                                     -1
                                 </Button>
@@ -205,7 +219,7 @@ function Stage2({
                     }
                     
                     {currentNumber <= 0 && (
-                        <div className="flex flex-row w-full justify-between space-x-2">
+                        <div id="buttonArea" className="flex flex-row w-full justify-between space-x-2">
                             <Button className='btnBlue flex-1' onClick={() => router.reload()}>
                                 Yeni Oyun
                             </Button>
@@ -252,5 +266,13 @@ function Stage2({
         setCurrentNumber(currentNumber - value)
         setHistory(newHistory)
         setTurn(COMPUTER)
+    }
+
+    function scroll () {
+        const buttonArea = document.getElementById('buttonArea')
+        if (!buttonArea) {
+            return
+        }
+        buttonArea.scrollIntoView()
     }
 }
