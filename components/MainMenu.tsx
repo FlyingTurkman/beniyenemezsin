@@ -14,9 +14,9 @@ export default function MainMenu() {
             <div className="flex h-full px-2 items-center justify-center hover:bg-blue-800 transition-all">
                 <Link href={'/play'}>Oyna</Link>
             </div>
-            <div className="flex h-full px-2 items-center justify-center hover:bg-blue-800 transition-all">
+            {/* <div className="flex h-full px-2 items-center justify-center hover:bg-blue-800 transition-all">
                 <Link href={'/'}>İstatistikler</Link>
-            </div>
+            </div> */}
         </div>
     )
 }

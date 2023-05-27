@@ -17,7 +17,7 @@ export default function Play() {
     const [history, setHistory] = useState<turnType[]>([])
     const [begin, setBegin] = useState<number>(0)
     return(
-        <div className="flex flex-col container max-h-[calc(100vh-160px)] mx-auto mt-20 bg-white rounded p-2 overflow-auto items-center">
+        <div className="flex flex-col container max-h-[calc(100vh-160px)] mx-auto mt-20 bg-white rounded p-2 overflow-auto items-center scrollbar-thin scrollbar-thumb-blue-600">
             {stage == 1 && 
                 <Stage1
                 starting={starting}
@@ -62,7 +62,7 @@ function Stage1({starting, setStage, setStarting, setTurn, setCurrentNumber, set
                 <h1>Hazırlık Aşaması</h1>
                 <hr/>
             </div>
-            <div className="flex flex-col sm:flex-row w-full space-x-2">
+            <div className="flex flex-col sm:flex-row w-full space-y-2 sm:space-x-2 overflow-auto">
                 <div className="flex flex-col flex-1 bg-green-600 text-white p-2 rounded items-center space-y-2">
                     <h2>Kimin Başlayacağını Seçeceğim</h2>
                     <hr/>
@@ -102,7 +102,7 @@ function Stage1({starting, setStage, setStarting, setTurn, setCurrentNumber, set
         setLoading(true)
         let number: number = 0
         while (number%3 != 1 ) {
-            let randomNumber: number = Math.floor(Math.random() * 100 ) + 20
+            let randomNumber: number = Math.floor(Math.random() * 80 ) + 20
             number = randomNumber
         }
         setStarting(number)
@@ -117,7 +117,7 @@ function Stage1({starting, setStage, setStarting, setTurn, setCurrentNumber, set
         setLoading(true)
         let number: number = 1
         while (number%3 == 1 ) {
-            let randomNumber: number = Math.floor(Math.random() * 100 ) + 20
+            let randomNumber: number = Math.floor(Math.random() * 80 ) + 20
             number = randomNumber
         }
         
@@ -182,7 +182,7 @@ function Stage2({
         scroll()
     }, [currentNumber])
     return(
-        <div className="flex flex-col w-full items-center space-y-2">
+        <div className="flex flex-col w-full items-center space-y-2 ">
             <div className="flex flex-col w-full sticky -top-2 items-center bg-white backdrop-blur-sm bg-opacity-70 p-2 space-y-2">
                 <div className="flex w-full flex-row items-center">
                     <div className="flex w-10">
@@ -200,41 +200,41 @@ function Stage2({
                 <hr/>
             </div>
             <div className="flex flex-col w-full max-h-full max-w-sm p-2 rounded space-y-2 overflow-auto">
-                    <div className="flex flex-row w-full p-2 rounded bg-gradient-to-r from-blue-600 to-green-600 text-white">
-                        <label className="flex w-10 border-r-white border-r items-center justify-center text-center"></label>
-                        <label className="flex flex-1 w-full items-center text-center justify-center">{starting}</label>
-                        <label className="flex w-10 border-l-white border-l items-center justify-center text-center"></label>
-                    </div>
-                    {history?.map((h, i) => {
-                        return(
-                            <div key={i} className={`flex flex-row w-full p-2 rounded ${h.turn == COMPUTER? 'bg-green-600': 'bg-blue-600'}  text-white`}>
-                                <label className="flex w-10 border-r-white border-r items-center justify-center text-center">{h.turn == PERSON? -h.play: ''}</label>
-                                <label className="flex flex-1 w-full items-center text-center justify-center">{h.number}</label>
-                                <label className="flex w-10 border-l-white border-l items-center justify-center text-center">{h.turn == COMPUTER? -h.play : ''}</label>
-                            </div>
-                        )
-                    })}
-                    {
-                        currentNumber > 0 && (
-                            <div id="buttonArea" className="flex flex-row w-full justify-between space-x-2">
-                                <Button className="btnBlue flex-1" disabled={turn == COMPUTER? true : false} onClick={() => personPlay(1)}>
-                                    -1
-                                </Button>
-                                <Button className="btnBlue flex-1" disabled={turn == COMPUTER? true : false} onClick={() => personPlay(2)}>
-                                    -2
-                                </Button>
-                            </div>
-                        )
-                    }
-                    
-                    {currentNumber <= 0 && (
+                <div className="flex flex-row w-full p-2 rounded bg-gradient-to-r from-blue-600 to-green-600 text-white">
+                    <label className="flex w-10 border-r-white border-r items-center justify-center text-center"></label>
+                    <label className="flex flex-1 w-full items-center text-center justify-center">{starting}</label>
+                    <label className="flex w-10 border-l-white border-l items-center justify-center text-center"></label>
+                </div>
+                {history?.map((h, i) => {
+                    return(
+                        <div key={i} className={`flex flex-row w-full p-2 rounded ${h.turn == COMPUTER? 'bg-green-600': 'bg-blue-600'}  text-white`}>
+                            <label className="flex w-10 border-r-white border-r items-center justify-center text-center">{h.turn == PERSON? -h.play: ''}</label>
+                            <label className="flex flex-1 w-full items-center text-center justify-center">{h.number}</label>
+                            <label className="flex w-10 border-l-white border-l items-center justify-center text-center">{h.turn == COMPUTER? -h.play : ''}</label>
+                        </div>
+                    )
+                })}
+                {
+                    currentNumber > 0 && (
                         <div id="buttonArea" className="flex flex-row w-full justify-between space-x-2">
-                            <Button className='btnBlue flex-1' onClick={() => router.reload()}>
-                                Yeni Oyun
+                            <Button className="btnBlue flex-1" disabled={turn == COMPUTER? true : false} onClick={() => personPlay(1)}>
+                                -1
+                            </Button>
+                            <Button className="btnBlue flex-1" disabled={turn == COMPUTER? true : false} onClick={() => personPlay(2)}>
+                                -2
                             </Button>
                         </div>
-                    )}
-                </div>
+                    )
+                }
+                
+                {currentNumber <= 0 && (
+                    <div id="buttonArea" className="flex flex-row w-full justify-between space-x-2">
+                        <Button className='btnBlue flex-1' onClick={() => router.reload()}>
+                            Yeni Oyun
+                        </Button>
+                    </div>
+                )}
+            </div>  
         </div>
     )
 
