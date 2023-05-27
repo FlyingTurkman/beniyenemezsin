@@ -21,7 +21,7 @@ export default function Index() {
         <div className="flex flex-1 flex-col items-center justify-center">
           <h1 className="text-center">Beni Yenemezsin</h1>
           <p className="text-justify">Kurallar basit. Bu oyunda bilgisayara karşı yarışıyorsun. Başlangıçta elimizde bir sayı oluyor. Daha sonra bu sayıdan 1 veya 2 çıkarıyorsun. 1 sayısının altına (0 veya -1) düşen oyunu kaybediyor.</p>
-          <p className="text-justify">Örneğin 15 sayısı başlangıç sayısı olsun. Sen bundan 1 veya 2 çıkarıp hamleni yapıyorsun ve 13 sayısına geliyorsun. Ardından bilgisayar 1 veya 2 çıkarıp hamlesini yapıyor ve 11 sayısına geliyor. 0 veya -1 olan oyunu kaybediyor.</p>
+          <p className="text-justify">Örneğin 15 sayısı başlangıç sayısı olsun. Sen 15 sayısından 1 veya 2 çıkarıp hamleni yapıyorsun ve 13 sayısına geliyorsun. Ardından, bilgisayar 13 sayısından 1 veya 2 çıkarıp hamlesini yapıyor ve 11 sayısına geliyor. 0 veya -1 olan oyunu kaybediyor.</p>
         </div>
       </div>
       <Link href={'/play'} className="btnBlue">Oyna</Link>
