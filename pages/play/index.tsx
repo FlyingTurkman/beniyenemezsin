@@ -2,13 +2,14 @@ import { useState, Dispatch, useEffect } from "react"
 import Button from "../../components/Button"
 import { COMPUTER, PERSON } from "../../utils/src/constants"
 import { turnType } from "../../types"
-
+import { useRouter } from "next/router"
 
 
 
 
 
 export default function Play() {
+    const router = useRouter()
     const [stage, setStage] = useState<number>(1)
     const [starting, setStarting] = useState<number>(0)
     const [turn, setTurn] = useState<number>(0)
@@ -28,7 +29,6 @@ export default function Play() {
                 setBegin={setBegin}
                 />
             }
-
             {stage == 2 && 
                 <Stage2
                 begin={begin}
@@ -92,8 +92,8 @@ function Stage1({starting, setStage, setStarting, setTurn, setCurrentNumber, set
     
     async function start1 () {
         setLoading(true)
-        let number: number = 1
-        while (number%3 == 1 ) {
+        let number: number = 0
+        while (number%3 != 1 ) {
             let randomNumber: number = Math.floor(Math.random() * 100 ) + 20
             number = randomNumber
         }
@@ -107,11 +107,12 @@ function Stage1({starting, setStage, setStarting, setTurn, setCurrentNumber, set
 
     async function start2 () {
         setLoading(true)
-        let number: number = 0
-        while (number%3 != 1 ) {
+        let number: number = 1
+        while (number%3 == 1 ) {
             let randomNumber: number = Math.floor(Math.random() * 100 ) + 20
             number = randomNumber
         }
+        
         setStarting(number)
         setCurrentNumber(number)
         setTurn(COMPUTER)
@@ -122,18 +123,12 @@ function Stage1({starting, setStage, setStarting, setTurn, setCurrentNumber, set
 
     async function chooseNumber () {
         setLoading(true)
-        if (starting%3 == 1) {
+        if (starting%3 != 1) {
             setStarting(starting)
             setCurrentNumber(starting)
             setTurn(COMPUTER)
             setBegin(COMPUTER)
             setStage(2)
-            setHistory([
-                {turn: COMPUTER, number: 21},
-                {turn: PERSON, number: 20},
-                {turn: COMPUTER, number: 19},
-
-            ])
         }else {
             setStarting(starting)
             setCurrentNumber(starting)
@@ -166,9 +161,10 @@ function Stage2({
     begin: number,
     setBegin: Dispatch<number>
 }) {
+    const router = useRouter()
     useEffect(() => {
         if (turn == COMPUTER) {
-            console.log('my turn')
+            computerPlay()
         }
     }, [turn])
     return(
@@ -179,19 +175,82 @@ function Stage2({
                     Başlayan Kişi: {begin == PERSON? 'Kullanıcı': 'Bilgisayar'}
                 </h1>
                 <hr/>
-                <div className="flex flex-col w-full max-w-sm p-2 rounded space-y-2">
-                    {history.map((h, i) => {
+            </div>
+            <div className="flex flex-col w-full max-h-full max-w-sm p-2 rounded space-y-2 overflow-auto">
+                    <div className="flex flex-row w-full p-2 rounded bg-gradient-to-r from-blue-600 to-green-600 text-white">
+                        <label className="flex w-10 border-r-white border-r items-center justify-center text-center"></label>
+                        <label className="flex flex-1 w-full items-center text-center justify-center">{starting}</label>
+                        <label className="flex w-10 border-l-white border-l items-center justify-center text-center"></label>
+                    </div>
+                    {history?.map((h, i) => {
                         return(
-                            <div key={i} className="flex flex-row w-full p-2 rounded bg-blue-600 text-white">
-                                <label className="flex w-10 border-r-white border-r items-center justify-center text-center"></label>
+                            <div key={i} className={`flex flex-row w-full p-2 rounded ${h.turn == COMPUTER? 'bg-green-600': 'bg-blue-600'}  text-white`}>
+                                <label className="flex w-10 border-r-white border-r items-center justify-center text-center">{h.turn == PERSON? -h.play: ''}</label>
                                 <label className="flex flex-1 w-full items-center text-center justify-center">{h.number}</label>
-                                <label className="flex w-10 border-l-white border-l items-center justify-center text-center">-2</label>
+                                <label className="flex w-10 border-l-white border-l items-center justify-center text-center">{h.turn == COMPUTER? -h.play : ''}</label>
                             </div>
                         )
                     })}
+                    {
+                        currentNumber > 0 && (
+                            <div className="flex flex-row w-full justify-between space-x-2">
+                                <Button className="btnBlue flex-1" disabled={turn == COMPUTER? true : false} onClick={() => personPlay(1)}>
+                                    -1
+                                </Button>
+                                <Button className="btnBlue flex-1" disabled={turn == COMPUTER? true : false} onClick={() => personPlay(2)}>
+                                    -2
+                                </Button>
+                            </div>
+                        )
+                    }
                     
+                    {currentNumber <= 0 && (
+                        <div className="flex flex-row w-full justify-between space-x-2">
+                            <Button className='btnBlue flex-1' onClick={() => router.reload()}>
+                                Yeni Oyun
+                            </Button>
+                        </div>
+                    )}
                 </div>
-            </div>
         </div>
     )
+
+    async function computerPlay() {
+        if ((currentNumber - 1)%3 == 1) {
+            setCurrentNumber(currentNumber - 1)
+            let newTurn: turnType[] = [{
+                turn: COMPUTER,
+                number: currentNumber - 1,
+                play: 1
+            }]
+            let oldHistory: turnType[] = history
+            let newHistory: turnType[] = oldHistory.concat(newTurn)
+            setHistory(newHistory)
+            setTurn(PERSON)
+        }else if((currentNumber - 2)%3 == 1) {
+            setCurrentNumber(currentNumber - 2)
+            let newTurn: turnType[] = [{
+                turn: COMPUTER,
+                number: currentNumber - 2,
+                play: 2
+            }]
+            let oldHistory: turnType[] = history
+            let newHistory: turnType[] = oldHistory.concat(newTurn)
+            setHistory(newHistory)
+            setTurn(PERSON)
+        }
+    }
+
+    async function personPlay(value: number) {
+        let newTurn: turnType[] = [{
+            play: value,
+            number: currentNumber - value,
+            turn: PERSON
+        }]
+        let oldHistory: turnType[] = history
+        let newHistory: turnType[] = oldHistory.concat(newTurn)
+        setCurrentNumber(currentNumber - value)
+        setHistory(newHistory)
+        setTurn(COMPUTER)
+    }
 }
