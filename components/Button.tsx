@@ -17,8 +17,10 @@ export default function Button( {loading, children, className, onClick, disabled
 
 }
 
+Button.displayName ='Button'
 
-Button.Icon=function({...props}){
+
+Button.Icon = function({...props}){
     return(
         <span {...props}>
             {props.children}
