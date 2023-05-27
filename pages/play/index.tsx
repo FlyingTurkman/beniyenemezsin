@@ -228,7 +228,8 @@ function Stage2({
                 }
                 
                 {currentNumber <= 0 && (
-                    <div id="buttonArea" className="flex flex-row w-full justify-between space-x-2">
+                    <div id="buttonArea" className="flex flex-col w-full justify-center items-center space-y-2">
+                        <label className="text-xl">Kaybettin</label>
                         <Button className='btnBlue flex-1' onClick={() => router.reload()}>
                             Yeni Oyun
                         </Button>
