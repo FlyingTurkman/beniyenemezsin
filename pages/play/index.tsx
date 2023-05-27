@@ -3,8 +3,8 @@ import Button from "../../components/Button"
 import { COMPUTER, PERSON } from "../../utils/src/constants"
 import { turnType } from "../../types"
 import { useRouter } from "next/router"
-
-
+import { IoPerson } from 'react-icons/io5'
+import { RiComputerFill } from 'react-icons/ri'
 
 
 
@@ -184,10 +184,19 @@ function Stage2({
     return(
         <div className="flex flex-col w-full items-center space-y-2">
             <div className="flex flex-col w-full sticky -top-2 items-center bg-white backdrop-blur-sm bg-opacity-70 p-2 space-y-2">
-                <h1>
-                    Başlangıç Numarası: {starting} <br/>
-                    Başlayan Kişi: {begin == PERSON? 'Kullanıcı': 'Bilgisayar'}
-                </h1>
+                <div className="flex w-full flex-row items-center">
+                    <div className="flex w-10">
+                        <IoPerson className="text-2xl text-blue-600"/>
+                    </div>
+                    <h1 className="flex flex-1 items-center justify-center">
+                        Başlangıç Numarası: {starting} <br/>
+                        Başlayan Kişi: {begin == PERSON? 'Kullanıcı': 'Bilgisayar'}
+                    </h1>
+                    <div className="flex w-10">
+                        <RiComputerFill className="text-2xl text-green-600"/>
+                    </div>
+                </div>
+
                 <hr/>
             </div>
             <div className="flex flex-col w-full max-h-full max-w-sm p-2 rounded space-y-2 overflow-auto">
